@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Permutator {
 
-    public static char[][] getPermutations(List<Character> liste) {
+    public static HashMap<Integer, List<Character>> getPermutations(List<Character> liste) {
 
         String listeString = "";
         for(Character character : liste) {
@@ -11,14 +11,18 @@ public class Permutator {
         }
         List<String> permutationsListe = permutations(listeString);
 
-        char[][] permutations = new char[getFakultaet(liste.size())][liste.size()];
+        HashMap<Integer, List<Character>> permutationsMap = new HashMap<>();
 
-        for(int i = 0; i<getFakultaet(liste.size()); i++) {
-            for(int j = 0; j<liste.size(); j++) {
-                permutations[i][j] = permutationsListe.get(i).toCharArray()[j];
+        for(int i = 0; i<permutationsListe.size(); i++) {
+            List<Character> charactersListe = new ArrayList<>();
+            char[] arrayChars = permutationsListe.get(i).toCharArray();
+            for(int j  = 0; j<arrayChars.length; j++) {
+                charactersListe.add(arrayChars[j]);
             }
+            permutationsMap.put(i+1, charactersListe);
         }
-        return permutations;
+
+        return permutationsMap;
     }
 
     // Iterative function to generate all permutations of a String in Java
@@ -54,8 +58,6 @@ public class Permutator {
                 }
             }
         }
-
-        System.out.println(partial);
 
         return partial;
     }

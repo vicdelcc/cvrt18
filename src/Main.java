@@ -29,7 +29,7 @@ public class Main {
         sortiereNachPrioritaet();
 
         // Make permutations and calculate delays
-        makePermutations();
+        makeAllPermutations();
 
         // Show 5 best permutations according to max delay
         showBestFive();
@@ -61,7 +61,7 @@ public class Main {
 
     }
 
-    public static void makePermutations() {
+    public static void makeAllPermutations() {
         HashMap<Integer, List<Character>> permutations = Permutator.getPermutations(reihenfolge);
 
         for (int i = 1; i <= permutations.keySet().size(); i++) {

@@ -1,6 +1,9 @@
 import com.google.common.base.Joiner;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -20,8 +23,6 @@ public class Main2 {
 
     private static HashMap<Character, HashMap<String, Integer>> daten = new HashMap<>();
 
-    private static HashMap<String, Integer> finalPermutations = new HashMap<>();
-
     public static void main(String[] args) {
 
         System.out.println("########### Reihenfolgeproblem mit NEH-Heuristik ###########");
@@ -32,13 +33,25 @@ public class Main2 {
         // Sortieren nach Priorität
         sortiereNachPrioritaet();
 
+        Stopwatch sw = new Stopwatch();
+        sw.start();
         // Find permutations
         findBestPermutation();
+        System.out.println("---- Gesamtlaufzeit: " + sw.elapsedTime(TimeUnit.MILLISECONDS) + " ms ----");
+
+        // Ask if same but with the other Verfahren
+        if(frageObNochmal()) {
+            Stopwatch sw2 = new Stopwatch();
+            sw2.start();
+            reihenfolge.clear();
+            findBestPermutation();
+            System.out.println("---- Gesamtlaufzeit: " + sw2.elapsedTime(TimeUnit.MILLISECONDS) + " ms ----");
+        }
 
     }
 
     public static void showErgebnis() {
-        System.out.println("\n#### Best permutation: " + Joiner.on(" - ").join(reihenfolge) + " ####");
+        System.out.println("\n#### BESTE PERMUTATION: " + Joiner.on(" - ").join(reihenfolge) + " ####");
     }
 
 
@@ -82,24 +95,24 @@ public class Main2 {
             permutations.put(1, combination1);
 
             // 2 und 3. Combination   C B A  udd B C A
-            for(int i=0; i < letters.size()-1; i++) {
+            for (int i = 0; i < letters.size() - 1; i++) {
                 List<Character> combination = new ArrayList<>();
                 // 2. Combination C B A
                 if (i == 0) {
                     combination.add(i, newChar);
-                    for(int j = 1; j < letters.size(); j++) {
-                        combination.add(j, letters.get(j-1));
+                    for (int j = 1; j < letters.size(); j++) {
+                        combination.add(j, letters.get(j - 1));
                     }
                     // 3. Combination B C A
                 } else {
-                    combination = permutations.get(i+1).stream().map(Character::new).collect(toList());
+                    combination = permutations.get(i + 1).stream().map(Character::new).collect(toList());
                     int indexOldNewLetter = combination.indexOf(newChar);
                     Character letterToSwap = combination.get(i);
                     combination.set(i, newChar);
-                    combination.set(indexOldNewLetter,letterToSwap);
+                    combination.set(indexOldNewLetter, letterToSwap);
                 }
 
-                permutations.put(i+2, combination);
+                permutations.put(i + 2, combination);
             }
 
         }
@@ -157,6 +170,34 @@ public class Main2 {
         return verspaetungAuftraegeDavor;
     }
 
+    public static boolean frageObNochmal() {
+        boolean nochmal = false;
+        String vorsortierungToDo = "";
+        if (listeAuftraege.get(0).equals('A')) {
+            vorsortierungToDo += "Last-In-First-Out (LIFO)";
+        } else {
+            vorsortierungToDo += "First-In-First-Out (FIFO)";
+        }
+        System.out.println("\nWollen Sie das selbe Reihenfolgeproblem mit Vorsortierung " + vorsortierungToDo + " lösen? (j/n)");
+        Scanner scanner = new Scanner(System.in);
+        boolean weiter = true;
+        String answer = "";
+        while (weiter) {
+            String antwort = scanner.next();
+            if (antwort.toLowerCase().equals("j") || antwort.toLowerCase().equals("n")) {
+                weiter = false;
+                answer = antwort;
+            } else {
+                System.out.println("Bitte Ja(j) oder Nein(n) wählen");
+            }
+        }
+        if (answer.toLowerCase().equals("j")) {
+            listeAuftraege = Lists.reverse(listeAuftraege);
+            nochmal = true;
+        }
+        return nochmal;
+    }
+
     public static void sortiereNachPrioritaet() {
         printSortiereFrage();
 
@@ -189,7 +230,7 @@ public class Main2 {
     }
 
     public static void printSortiereFrage() {
-        System.out.println("Welche Vorsortierung wollen Sie machen?");
+        System.out.println("\nWelche Vorsortierung wollen Sie machen?");
         System.out.println("1. First-In-First-Out (FIFO)");
         System.out.println("2. Last-In-First-Out (LIFO)");
     }
@@ -215,7 +256,7 @@ public class Main2 {
         } else {
 
             for (int i = 1; i <= anzahlAuftraege; i++) {
-                System.out.println("#### AUFTRAG NR. " + i + " ####");
+                System.out.println("\n#### AUFTRAG NR. " + i + " ####");
                 System.out.println("Bearbeitungszeit: ");
                 int bearbeitungszeit = scanner.nextInt();
                 System.out.println("Soll-Endtermin: : ");

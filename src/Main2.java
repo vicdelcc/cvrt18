@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toList;
+
 
 public class Main2 {
 
@@ -68,52 +70,38 @@ public class Main2 {
             permutations.put(2, combination2);
         } else {
 
+            Character newChar = listeAuftraege.get(index);
             List<Character> letters = new ArrayList<>();
             for (Character character : reihenfolge) {
                 letters.add(character);
             }
-            letters.add(listeAuftraege.get(index));
+            letters.add(newChar);
 
-            HashMap<Integer, List<Character>> combis = Permutator.getPermutations(letters);
-            for(Map.Entry<Integer, List<Character>> entry : combis.entrySet()) {
-                if(Joiner.on("").join(entry.getValue()).contains(Joiner.on("").join(reihenfolge))) {
-                        permutations.put(entry.getKey(), entry.getValue());
+            // 1. Combination    B A C  (make clone)
+            List<Character> combination1 = letters.stream().map(Character::new).collect(toList());
+            permutations.put(1, combination1);
+
+            // 2 und 3. Combination   C B A  udd B C A
+            for(int i=0; i < letters.size()-1; i++) {
+                List<Character> combination = new ArrayList<>();
+                // 2. Combination C B A
+                if (i == 0) {
+                    combination.add(i, newChar);
+                    for(int j = 1; j < letters.size(); j++) {
+                        combination.add(j, letters.get(j-1));
+                    }
+                    // 3. Combination B C A
+                } else {
+                    combination = permutations.get(i+1).stream().map(Character::new).collect(toList());
+                    int indexOldNewLetter = combination.indexOf(newChar);
+                    Character letterToSwap = combination.get(i);
+                    combination.set(i, newChar);
+                    combination.set(indexOldNewLetter,letterToSwap);
                 }
+
+                permutations.put(i+2, combination);
             }
 
-//            List<Character> possibilities = new ArrayList<>();
-//
-//            // Erst mal addieren, die die schon fest stehen
-//            for (Character character : reihenfolge) {
-//                possibilities.add(character);
-//            }
-//            // neue dazu addieren
-//            possibilities.add(listeAuftraege.get(index));
-//
-//            permutations.put(1, possibilities);
-//
-//
-//            // So many loops als die index-nummer (für 3 buchstaben ist der index von 3. Buchstabe 2)
-//            // Es gibt eigentlich so viele Loops wie anzahl an Buchstaben aber minus 1, da wir oben schon
-//            // die neue buchstabe am Ende hinzugefügt haben
-//            for (int i = 0; i < index; i++) {
-//                // Make a clone of possibilities to avoid rewriting
-//                List<Character> possibilitiesNew = possibilities.stream().map(Character::new).collect(toList());
-//                List<Character> temp = possibilities.stream().map(Character::new).collect(toList());
-//                possibilitiesNew.set(i, listeAuftraege.get(index));
-//
-//                if (i + 1 < possibilities.size()) {
-//                    possibilitiesNew.set(i + 1, temp.get(i));
-//                    if (i + 2 < possibilities.size()) {
-//                        possibilitiesNew.set(i + 2, temp.get(i + 1));
-//                    } else {
-//                        possibilitiesNew.set(0, temp.get(i + 1));
-//                    }
-//                } else {
-//                    possibilitiesNew.set(0, temp.get(i));
-//                }
-//                permutations.put(i + 2, possibilitiesNew);
-//            }
         }
         return permutations;
     }

@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.toList;
 
 
-public class Main2 {
+public class ReihenfolgeproblemSolverOptimiert {
 
     private static final String BEARBEITUNGSZEIT = "Bearbeitungszeit";
     private static final String SOLLENDTERMIN = "Soll-Endtermin";
@@ -28,7 +28,7 @@ public class Main2 {
         System.out.println("########### Reihenfolgeproblem mit NEH-Heuristik ###########");
 
         // Aufträge aufnehmen
-        daten = getInputAuftraege();
+        daten = Common.getInputAuftraege();
 
         // Sortieren nach Priorität
         sortiereNachPrioritaet();
@@ -235,41 +235,4 @@ public class Main2 {
         System.out.println("2. Last-In-First-Out (LIFO)");
     }
 
-
-    public static HashMap<Character, HashMap<String, Integer>> getInputAuftraege() {
-
-        int anzahlAuftraege = 0;
-
-        Scanner scanner = new Scanner(System.in);
-
-        while (anzahlAuftraege < 2) {
-
-            System.out.println("Wie viele Aufträge?");
-            anzahlAuftraege = scanner.nextInt();
-            if (anzahlAuftraege < 2) {
-                System.out.println("Bitte definieren Sie mindestens 2 Aufträge.\n");
-            }
-        }
-
-        if (anzahlAuftraege < 2) {
-
-        } else {
-
-            for (int i = 1; i <= anzahlAuftraege; i++) {
-                System.out.println("\n#### AUFTRAG NR. " + i + " ####");
-                System.out.println("Bearbeitungszeit: ");
-                int bearbeitungszeit = scanner.nextInt();
-                System.out.println("Soll-Endtermin: : ");
-                int sollEndetermin = scanner.nextInt();
-
-                HashMap<String, Integer> zeiten = new HashMap<>();
-                zeiten.put(BEARBEITUNGSZEIT, bearbeitungszeit);
-                zeiten.put(SOLLENDTERMIN, sollEndetermin);
-
-                daten.put(ALPHABET[i - 1], zeiten);
-            }
-        }
-
-        return daten;
-    }
 }

@@ -1,10 +1,13 @@
+import com.google.common.base.Stopwatch;
+
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import java.util.Map.Entry;
 
-public class Main {
+public class ReihenfolgeproblemSolver {
 
     private static final String BEARBEITUNGSZEIT = "Bearbeitungszeit";
     private static final String SOLLENDTERMIN = "Soll-Endtermin";
@@ -23,17 +26,21 @@ public class Main {
         System.out.println("########### Reihenfolgeproblem mit NEH-Heuristik ###########");
 
         // Aufträge aufnehmen
-        daten = getInputAuftraege();
+        daten = Common.getInputAuftraege();
 
         // Sortieren nach Priorität
-        sortiereNachPrioritaet();
+        for (int i = 0; i < daten.size(); i++) {
+            reihenfolge.add(ALPHABET[i]);
+        }
 
+        Stopwatch sw = new Stopwatch();
+        sw.start();
         // Make permutations and calculate delays
         makeAllPermutations();
 
         // Show 5 best permutations according to max delay
         showBestFive();
-
+        System.out.println("---- Gesamtlaufzeit: " + sw.elapsedTime(TimeUnit.MILLISECONDS) + " ms ----");
     }
 
     public static void showBestFive() {
@@ -113,79 +120,4 @@ public class Main {
     }
 
 
-    public static void sortiereNachPrioritaet() {
-        printSortiereFrage();
-
-        Scanner scanner = new Scanner(System.in);
-        int auswahl = 0;
-        while (auswahl != 1 && auswahl != 2) {
-
-            try {
-                auswahl = Integer.parseInt(scanner.next());
-                switch (auswahl) {
-                    case 1:
-                        for (int i = 0; i < daten.size(); i++) {
-                            reihenfolge.add(ALPHABET[i]);
-                        }
-                        break;
-                    case 2:
-                        for (int i = daten.keySet().size() - 1; i >= 0; i--) {
-                            reihenfolge.add(ALPHABET[i]);
-                        }
-                        break;
-                    default:
-                        System.out.println("Bitte wählen Sie eine von den vorgegebenen Optionen.\n");
-                        printSortiereFrage();
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Bitte wählen Sie eine von den vorgegebenen Optionen.\n");
-                printSortiereFrage();
-            }
-        }
-    }
-
-    public static void printSortiereFrage() {
-        System.out.println("Welche Vorsortierung wollen Sie machen?");
-        System.out.println("1. First-In-First-Out (FIFO)");
-        System.out.println("2. Last-In-First-Out (LIFO)");
-    }
-
-    public static HashMap<Character, HashMap<String, Integer>> getInputAuftraege() {
-
-        HashMap<Character, HashMap<String, Integer>> daten = new HashMap<>();
-
-        int anzahlAuftraege = 0;
-
-        Scanner scanner = new Scanner(System.in);
-
-        while (anzahlAuftraege < 2) {
-
-            System.out.println("Wie viele Aufträge?");
-            anzahlAuftraege = scanner.nextInt();
-            if (anzahlAuftraege < 2) {
-                System.out.println("Bitte definieren Sie mindestens 2 Aufträge.\n");
-            }
-        }
-
-        if (anzahlAuftraege < 2) {
-
-        } else {
-
-            for (int i = 1; i <= anzahlAuftraege; i++) {
-                System.out.println("#### AUFTRAG NR. " + i + " ####");
-                System.out.println("Bearbeitungszeit: ");
-                int bearbeitungszeit = scanner.nextInt();
-                System.out.println("Soll-Endtermin: : ");
-                int sollEndetermin = scanner.nextInt();
-
-                HashMap<String, Integer> zeiten = new HashMap<>();
-                zeiten.put(BEARBEITUNGSZEIT, bearbeitungszeit);
-                zeiten.put(SOLLENDTERMIN, sollEndetermin);
-
-                daten.put(ALPHABET[i - 1], zeiten);
-            }
-        }
-
-        return daten;
-    }
 }

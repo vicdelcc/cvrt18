@@ -61,13 +61,4 @@ public class Permutator {
 
         return partial;
     }
-
-
-    public static int getFakultaet(int zahl) {
-        int fakultaet = 1;
-        for (int i = 1; i <= zahl; i++) {
-            fakultaet = fakultaet * i;
-        }
-        return fakultaet;
-    }
 }

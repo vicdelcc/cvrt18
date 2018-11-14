@@ -2,6 +2,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class ReihenfolgeproblemSolverOptimiert {
         System.out.println("---- Gesamtlaufzeit: " + sw.elapsedTime(TimeUnit.MILLISECONDS) + " ms ----");
 
         // Ask if same but with the other Verfahren
-        if(frageObNochmal()) {
+        if (frageObNochmal()) {
             Stopwatch sw2 = new Stopwatch();
             sw2.start();
             reihenfolge.clear();
@@ -203,7 +204,7 @@ public class ReihenfolgeproblemSolverOptimiert {
 
         Scanner scanner = new Scanner(System.in);
         int auswahl = 0;
-        while (auswahl != 1 && auswahl != 2) {
+        while (auswahl != 1 && auswahl != 2 && auswahl != 3) {
 
             try {
                 auswahl = Integer.parseInt(scanner.next());
@@ -217,6 +218,9 @@ public class ReihenfolgeproblemSolverOptimiert {
                         for (int i = daten.keySet().size() - 1; i >= 0; i--) {
                             listeAuftraege.add(ALPHABET[i]);
                         }
+                        break;
+                    case 3:
+                        prioritaetenFestlegen();
                         break;
                     default:
                         System.out.println("Bitte wählen Sie eine von den vorgegebenen Optionen.\n");
@@ -233,6 +237,57 @@ public class ReihenfolgeproblemSolverOptimiert {
         System.out.println("\nWelche Vorsortierung wollen Sie machen?");
         System.out.println("1. First-In-First-Out (FIFO)");
         System.out.println("2. Last-In-First-Out (LIFO)");
+        System.out.println("3. Prioritäten einzeln festlegen");
+    }
+
+    public static void prioritaetenFestlegen() {
+
+        HashMap<Character, Integer> auftraegePrios = new HashMap<>();
+
+        List<Integer> prioritaetenMoeglich = new ArrayList<>();
+        for (int i = 1; i <= daten.size(); i++) {
+            prioritaetenMoeglich.add(i);
+        }
+        Scanner scanner = new Scanner(System.in);
+
+        for (Map.Entry<Character, HashMap<String, Integer>> entry : daten.entrySet()) {
+            System.out.println("Auftrag " + entry.getKey() + ". Bearbeitungszeit: " + entry.getValue().get(BEARBEITUNGSZEIT) + ". Soll-Endetermin: " + entry.getValue().get(SOLLENDTERMIN));
+            System.out.println("Mögliche Prioritäten: " + Joiner.on(", ").join(prioritaetenMoeglich));
+            int auswahl = 0;
+            while (prioritaetenMoeglich.size()>0) {
+                try {
+                    String antwort = scanner.next();
+                    auswahl = Integer.parseInt(antwort);
+                    if(!prioritaetenMoeglich.contains(auswahl) || auswahl == 0) {
+                        System.out.println("Bitte wählen ie eine von den möglichen Prioritäten");
+                        continue;
+                    } else {
+                        auftraegePrios.put(entry.getKey(), auswahl);
+                        prioritaetenMoeglich.remove(auswahl);
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Bitte wählen Sie eine von den möglichen Prioritäten");
+                    continue;
+                }
+
+            }
+
+        }
+
+
+        Object[] a = auftraegePrios.entrySet().toArray();
+        Arrays.sort(a, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                return ((Map.Entry<Character, Integer>) o2).getValue()
+                        .compareTo(((Map.Entry<Character, Integer>) o1).getValue());
+            }
+        });
+
+        for (Object e : a) {
+            System.out.println(((Map.Entry<Character, Integer>) e).getKey() + " : "
+                    + ((Map.Entry<Character, Integer>) e).getValue());
+        }
+
     }
 
 }

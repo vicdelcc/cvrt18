@@ -33,7 +33,7 @@ public class Common {
         } else {
 
             for (int i = 1; i <= anzahlAuftraege; i++) {
-                System.out.println("#### AUFTRAG NR. " + i + " ####");
+                System.out.println("\n#### AUFTRAG NR. " + i + " ####");
                 System.out.println("Bearbeitungszeit: ");
                 int bearbeitungszeit = scanner.nextInt();
                 System.out.println("Soll-Endtermin: : ");

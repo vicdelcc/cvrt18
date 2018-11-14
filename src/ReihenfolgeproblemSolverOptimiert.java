@@ -41,14 +41,13 @@ public class ReihenfolgeproblemSolverOptimiert {
         System.out.println("---- Gesamtlaufzeit: " + sw.elapsedTime(TimeUnit.MILLISECONDS) + " ms ----");
 
         // Ask if same but with the other Verfahren
-        if (frageObNochmal()) {
+        while (frageObNochmal()) {
+            sortiereNachPrioritaet();
             Stopwatch sw2 = new Stopwatch();
             sw2.start();
-            reihenfolge.clear();
             findBestPermutation();
             System.out.println("---- Gesamtlaufzeit: " + sw2.elapsedTime(TimeUnit.MILLISECONDS) + " ms ----");
         }
-
     }
 
     public static void showErgebnis() {
@@ -173,13 +172,7 @@ public class ReihenfolgeproblemSolverOptimiert {
 
     public static boolean frageObNochmal() {
         boolean nochmal = false;
-        String vorsortierungToDo = "";
-        if (listeAuftraege.get(0).equals('A')) {
-            vorsortierungToDo += "Last-In-First-Out (LIFO)";
-        } else {
-            vorsortierungToDo += "First-In-First-Out (FIFO)";
-        }
-        System.out.println("\nWollen Sie das selbe Reihenfolgeproblem mit Vorsortierung " + vorsortierungToDo + " lösen? (j/n)");
+        System.out.println("\nWollen Sie das selbe Reihenfolgeproblem mit einer anderen Vorsortierung lösen (j/n)");
         Scanner scanner = new Scanner(System.in);
         boolean weiter = true;
         String answer = "";
@@ -193,8 +186,9 @@ public class ReihenfolgeproblemSolverOptimiert {
             }
         }
         if (answer.toLowerCase().equals("j")) {
-            listeAuftraege = Lists.reverse(listeAuftraege);
             nochmal = true;
+            listeAuftraege.clear();
+            reihenfolge.clear();
         }
         return nochmal;
     }
@@ -251,41 +245,39 @@ public class ReihenfolgeproblemSolverOptimiert {
         Scanner scanner = new Scanner(System.in);
 
         for (Map.Entry<Character, HashMap<String, Integer>> entry : daten.entrySet()) {
-            System.out.println("Auftrag " + entry.getKey() + ". Bearbeitungszeit: " + entry.getValue().get(BEARBEITUNGSZEIT) + ". Soll-Endetermin: " + entry.getValue().get(SOLLENDTERMIN));
-            System.out.println("Mögliche Prioritäten: " + Joiner.on(", ").join(prioritaetenMoeglich));
-            int auswahl = 0;
-            while (prioritaetenMoeglich.size()>0) {
+            System.out.print("Auftrag " + entry.getKey() + ". Bearbeitungszeit: " + entry.getValue().get(BEARBEITUNGSZEIT) + ". Soll-Endetermin: " + entry.getValue().get(SOLLENDTERMIN));
+            System.out.println(" (Mögliche Prioritäten: " + Joiner.on(", ").join(prioritaetenMoeglich) + ")");
+            int auswahl;
+            boolean weiter = true;
+            while (weiter) {
                 try {
                     String antwort = scanner.next();
                     auswahl = Integer.parseInt(antwort);
-                    if(!prioritaetenMoeglich.contains(auswahl) || auswahl == 0) {
+                    if (!prioritaetenMoeglich.contains(auswahl) || auswahl == 0) {
                         System.out.println("Bitte wählen ie eine von den möglichen Prioritäten");
-                        continue;
                     } else {
                         auftraegePrios.put(entry.getKey(), auswahl);
-                        prioritaetenMoeglich.remove(auswahl);
+                        prioritaetenMoeglich.remove(new Integer(auswahl));
+                        weiter = false;
                     }
                 } catch (InputMismatchException e) {
                     System.out.println("Bitte wählen Sie eine von den möglichen Prioritäten");
-                    continue;
                 }
 
             }
 
         }
 
-
         Object[] a = auftraegePrios.entrySet().toArray();
         Arrays.sort(a, new Comparator() {
             public int compare(Object o1, Object o2) {
-                return ((Map.Entry<Character, Integer>) o2).getValue()
-                        .compareTo(((Map.Entry<Character, Integer>) o1).getValue());
+                return ((Map.Entry<Character, Integer>) o1).getValue()
+                        .compareTo(((Map.Entry<Character, Integer>) o2).getValue());
             }
         });
-
+        listeAuftraege.clear();
         for (Object e : a) {
-            System.out.println(((Map.Entry<Character, Integer>) e).getKey() + " : "
-                    + ((Map.Entry<Character, Integer>) e).getValue());
+            listeAuftraege.add(((Map.Entry<Character, Integer>) e).getKey());
         }
 
     }

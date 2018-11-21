@@ -1,8 +1,6 @@
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Lists;
 
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -196,12 +194,12 @@ public class ReihenfolgeproblemSolverOptimiert {
     public static void sortiereNachPrioritaet() {
         printSortiereFrage();
 
-        Scanner scanner = new Scanner(System.in);
+
         int auswahl = 0;
         while (auswahl != 1 && auswahl != 2 && auswahl != 3) {
-
+            Scanner scanner = new Scanner(System.in);
             try {
-                auswahl = Integer.parseInt(scanner.next());
+                auswahl = scanner.nextInt();
                 switch (auswahl) {
                     case 1:
                         for (int i = 0; i < daten.size(); i++) {
@@ -217,11 +215,11 @@ public class ReihenfolgeproblemSolverOptimiert {
                         prioritaetenFestlegen();
                         break;
                     default:
-                        System.out.println("Bitte wählen Sie eine von den vorgegebenen Optionen.\n");
+                        System.out.println(" ----- Bitte wählen Sie eine von den vorgegebenen Optionen! -----");
                         printSortiereFrage();
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Bitte wählen Sie eine von den vorgegebenen Optionen.\n");
+            } catch (InputMismatchException e) {
+                System.out.println(" ----- Bitte wählen Sie eine von den vorgegebenen Optionen! -----");
                 printSortiereFrage();
             }
         }

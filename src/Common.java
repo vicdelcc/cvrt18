@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -17,35 +18,55 @@ public class Common {
 
         int anzahlAuftraege = 0;
 
-        Scanner scanner = new Scanner(System.in);
 
         while (anzahlAuftraege < 2) {
-
+            Scanner scanner = new Scanner(System.in);
             System.out.println("Wie viele Aufträge?");
-            anzahlAuftraege = scanner.nextInt();
-            if (anzahlAuftraege < 2) {
-                System.out.println("Bitte definieren Sie mindestens 2 Aufträge.\n");
+            try {
+                anzahlAuftraege = scanner.nextInt();
+                if (anzahlAuftraege < 2) {
+                    System.out.println("------  Bitte definieren Sie mindestens 2 Aufträge. ------ ");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("------ Bitte geben Sie nur ganze Zahlen an! ------ ");
             }
+
         }
 
-        if (anzahlAuftraege < 2) {
-
-        } else {
 
             for (int i = 1; i <= anzahlAuftraege; i++) {
-                System.out.println("\n#### AUFTRAG NR. " + i + " ####");
-                System.out.println("Bearbeitungszeit: ");
-                int bearbeitungszeit = scanner.nextInt();
-                System.out.println("Soll-Endtermin: : ");
-                int sollEndetermin = scanner.nextInt();
+                boolean weiter = true;
+                while(weiter) {
+                    try {
+                        Scanner scanner = new Scanner(System.in);
+                        System.out.println("\n#### AUFTRAG NR. " + i + " ####");
+                        System.out.println("Bearbeitungszeit: ");
+                        int bearbeitungszeit = scanner.nextInt();
+                        weiter = false;
+                        boolean weiter2 = true;
+                        while(weiter2) {
+                            try {
+                                Scanner scanner2 = new Scanner(System.in);
+                                System.out.println("Soll-Endtermin: : ");
+                                int sollEndetermin = scanner2.nextInt();
 
-                HashMap<String, Integer> zeiten = new HashMap<>();
-                zeiten.put(BEARBEITUNGSZEIT, bearbeitungszeit);
-                zeiten.put(SOLLENDTERMIN, sollEndetermin);
+                                HashMap<String, Integer> zeiten = new HashMap<>();
+                                zeiten.put(BEARBEITUNGSZEIT, bearbeitungszeit);
+                                zeiten.put(SOLLENDTERMIN, sollEndetermin);
 
-                daten.put(ALPHABET[i - 1], zeiten);
+                                daten.put(ALPHABET[i - 1], zeiten);
+                                weiter2 = false;
+                            } catch(InputMismatchException e) {
+                                System.out.println("------ Bitte geben Sie nur ganze Zahlen an! ------ ");
+                            }
+                        }
+
+                    } catch (InputMismatchException e) {
+                        System.out.println("------ Bitte geben Sie nur ganze Zahlen an! ------ ");
+                    }
+                }
+
             }
-        }
 
         return daten;
     }

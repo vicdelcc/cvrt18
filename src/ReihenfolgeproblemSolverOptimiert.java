@@ -240,26 +240,24 @@ public class ReihenfolgeproblemSolverOptimiert {
         for (int i = 1; i <= daten.size(); i++) {
             prioritaetenMoeglich.add(i);
         }
-        Scanner scanner = new Scanner(System.in);
 
         for (Map.Entry<Character, HashMap<String, Integer>> entry : daten.entrySet()) {
-            System.out.print("Auftrag " + entry.getKey() + ". Bearbeitungszeit: " + entry.getValue().get(BEARBEITUNGSZEIT) + ". Soll-Endetermin: " + entry.getValue().get(SOLLENDTERMIN));
-            System.out.println(" (Mögliche Prioritäten: " + Joiner.on(", ").join(prioritaetenMoeglich) + ")");
             int auswahl;
             boolean weiter = true;
             while (weiter) {
+                System.out.print("Auftrag " + entry.getKey() + ". Bearbeitungszeit: " + entry.getValue().get(BEARBEITUNGSZEIT) + ". Soll-Endetermin: " + entry.getValue().get(SOLLENDTERMIN));
+                System.out.println(" (Mögliche Prioritäten: " + Joiner.on(", ").join(prioritaetenMoeglich) + ")");
+                Scanner scanner = new Scanner(System.in);
                 try {
-                    String antwort = scanner.next();
-                    auswahl = Integer.parseInt(antwort);
-                    if (!prioritaetenMoeglich.contains(auswahl) || auswahl == 0) {
-                        System.out.println("Bitte wählen ie eine von den möglichen Prioritäten");
+                    auswahl = scanner.nextInt();
+                    if (!prioritaetenMoeglich.contains(auswahl) || auswahl == 0) { System.out.println(" ----- Bitte wählen ie eine von den möglichen Prioritäten! ----- ");
                     } else {
                         auftraegePrios.put(entry.getKey(), auswahl);
                         prioritaetenMoeglich.remove(new Integer(auswahl));
                         weiter = false;
                     }
                 } catch (InputMismatchException e) {
-                    System.out.println("Bitte wählen Sie eine von den möglichen Prioritäten");
+                    System.out.println(" ----- Bitte wählen Sie eine von den möglichen Prioritäten! ----- ");
                 }
 
             }

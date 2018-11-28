@@ -77,13 +77,9 @@ public class Common {
 
     public static char[] erweitereCharArray(int anzahl) {
         if(anzahl > 27) {
-            ALPHABET = new char[54];
+            ALPHABET = new char[100];
             int i = 0;
-            for (char c = 'A'; c <= 'Z'; c++) {
-                ALPHABET[i] = c;
-                i++;
-            }
-            for (char c = 'a'; c <= 'z'; c++) {
+            for (char c = 65; c < 165; c++) {
                 ALPHABET[i] = c;
                 i++;
             }

@@ -14,7 +14,7 @@ public class ReihenfolgeproblemSolverOptimiert {
     private static final String BEARBEITUNGSZEIT = "Bearbeitungszeit";
     private static final String SOLLENDTERMIN = "Soll-Endtermin";
 
-    private static final char[] ALPHABET = IntStream.rangeClosed('A', 'Z').mapToObj(c -> "" + (char) c).collect(Collectors.joining()).toCharArray();
+    private static char[] ALPHABET = IntStream.rangeClosed('A', 'Z').mapToObj(c -> "" + (char) c).collect(Collectors.joining()).toCharArray();
 
     private static List<Character> listeAuftraege = new ArrayList<>();
 
@@ -29,6 +29,9 @@ public class ReihenfolgeproblemSolverOptimiert {
         // Aufträge aufnehmen
         daten = Common.getInputAuftraege();
 
+        // ALPHABET erweitern wenn nötig
+        ALPHABET = Common.erweitereCharArray(daten.size());
+
         // Sortieren nach Priorität
         sortiereNachPrioritaet();
 
@@ -39,7 +42,9 @@ public class ReihenfolgeproblemSolverOptimiert {
         System.out.println("---- Gesamtlaufzeit: " + sw.elapsedTime(TimeUnit.MILLISECONDS) + " ms ----");
 
         // Ask if same but with the other Verfahren
-        while (frageObNochmal()) {
+        while (Common.stelleJaNeinFrage("\nWollen Sie das selbe Reihenfolgeproblem mit einer anderen Vorsortierung lösen (j/n)")) {
+            listeAuftraege.clear();
+            reihenfolge.clear();
             sortiereNachPrioritaet();
             Stopwatch sw2 = new Stopwatch();
             sw2.start();
@@ -141,7 +146,7 @@ public class ReihenfolgeproblemSolverOptimiert {
                 System.out.println("Verspätung Auftrag " + auftragChar + ": " + verspaetung);
                 gesamtVerspaetung += verspaetung;
             }
-
+            System.out.println("### GESAMTVERSPÄTUNG: " + gesamtVerspaetung + " ###");
             verspaetungen.put(i, gesamtVerspaetung);
         }
 
@@ -151,6 +156,9 @@ public class ReihenfolgeproblemSolverOptimiert {
                 min = entry;
             }
         }
+
+
+
         reihenfolge.clear();
         for (Character character : permutations.get(min.getKey())) {
             reihenfolge.add(character);
@@ -168,28 +176,6 @@ public class ReihenfolgeproblemSolverOptimiert {
         return verspaetungAuftraegeDavor;
     }
 
-    public static boolean frageObNochmal() {
-        boolean nochmal = false;
-        System.out.println("\nWollen Sie das selbe Reihenfolgeproblem mit einer anderen Vorsortierung lösen (j/n)");
-        Scanner scanner = new Scanner(System.in);
-        boolean weiter = true;
-        String answer = "";
-        while (weiter) {
-            String antwort = scanner.next();
-            if (antwort.toLowerCase().equals("j") || antwort.toLowerCase().equals("n")) {
-                weiter = false;
-                answer = antwort;
-            } else {
-                System.out.println("Bitte Ja(j) oder Nein(n) wählen");
-            }
-        }
-        if (answer.toLowerCase().equals("j")) {
-            nochmal = true;
-            listeAuftraege.clear();
-            reihenfolge.clear();
-        }
-        return nochmal;
-    }
 
     public static void sortiereNachPrioritaet() {
         printSortiereFrage();

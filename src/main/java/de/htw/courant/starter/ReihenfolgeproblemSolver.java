@@ -1,5 +1,8 @@
+package de.htw.courant.starter;
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
+import de.htw.courant.util.Common;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +12,7 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.toList;
 
 
-public class ReihenfolgeproblemSolverOptimiert {
+public class ReihenfolgeproblemSolver {
 
     private static final String BEARBEITUNGSZEIT = "Bearbeitungszeit";
     private static final String SOLLENDTERMIN = "Soll-Endtermin";
@@ -36,7 +39,6 @@ public class ReihenfolgeproblemSolverOptimiert {
         sortiereNachPrioritaet();
 
         Stopwatch sw = Stopwatch.createStarted();
-        sw.start();
         // Find permutations
         findBestPermutation();
         System.out.println("---- Gesamtlaufzeit: " + sw.elapsed(TimeUnit.MILLISECONDS) + " ms ----");
@@ -47,7 +49,6 @@ public class ReihenfolgeproblemSolverOptimiert {
             reihenfolge.clear();
             sortiereNachPrioritaet();
             Stopwatch sw2 = Stopwatch.createStarted();
-            sw2.start();
             findBestPermutation();
             System.out.println("---- Gesamtlaufzeit: " + sw2.elapsed(TimeUnit.MILLISECONDS) + " ms ----");
         }
@@ -232,7 +233,6 @@ public class ReihenfolgeproblemSolverOptimiert {
         for (Object e : o) {
             listeAuftraege.add(((Map.Entry<Character, HashMap<String, Integer>>) e).getKey());
         }
-        System.out.println("Blu");
     }
 
 }

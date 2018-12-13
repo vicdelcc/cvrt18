@@ -1,3 +1,5 @@
+package de.htw.courant.util;
+
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;

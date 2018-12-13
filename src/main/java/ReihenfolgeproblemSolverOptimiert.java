@@ -35,21 +35,21 @@ public class ReihenfolgeproblemSolverOptimiert {
         // Sortieren nach Priorität
         sortiereNachPrioritaet();
 
-        Stopwatch sw = new Stopwatch();
+        Stopwatch sw = Stopwatch.createStarted();
         sw.start();
         // Find permutations
         findBestPermutation();
-        System.out.println("---- Gesamtlaufzeit: " + sw.elapsedTime(TimeUnit.MILLISECONDS) + " ms ----");
+        System.out.println("---- Gesamtlaufzeit: " + sw.elapsed(TimeUnit.MILLISECONDS) + " ms ----");
 
         // Ask if same but with the other Verfahren
         while (Common.stelleJaNeinFrage("\nWollen Sie das selbe Reihenfolgeproblem mit einer anderen Vorsortierung lösen (j/n)")) {
             listeAuftraege.clear();
             reihenfolge.clear();
             sortiereNachPrioritaet();
-            Stopwatch sw2 = new Stopwatch();
+            Stopwatch sw2 = Stopwatch.createStarted();
             sw2.start();
             findBestPermutation();
-            System.out.println("---- Gesamtlaufzeit: " + sw2.elapsedTime(TimeUnit.MILLISECONDS) + " ms ----");
+            System.out.println("---- Gesamtlaufzeit: " + sw2.elapsed(TimeUnit.MILLISECONDS) + " ms ----");
         }
     }
 

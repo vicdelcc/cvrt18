@@ -198,7 +198,7 @@ public class ReihenfolgeproblemSolverOptimiert {
                         }
                         break;
                     case 3:
-                        prioritaetenFestlegen();
+                        priosNachSollEndeTerminBestimmen();
                         break;
                     default:
                         System.out.println(" ----- Bitte wählen Sie eine von den vorgegebenen Optionen! -----");
@@ -215,53 +215,24 @@ public class ReihenfolgeproblemSolverOptimiert {
         System.out.println("\nWelche Vorsortierung wollen Sie machen?");
         System.out.println("1. First-In-First-Out (FIFO)");
         System.out.println("2. Last-In-First-Out (LIFO)");
-        System.out.println("3. Prioritäten einzeln festlegen");
+        System.out.println("3. Prioritäten nach Soll-Endetermin");
     }
 
-    public static void prioritaetenFestlegen() {
+    public static void priosNachSollEndeTerminBestimmen() {
 
-        HashMap<Character, Integer> auftraegePrios = new HashMap<>();
-
-        List<Integer> prioritaetenMoeglich = new ArrayList<>();
-        for (int i = 1; i <= daten.size(); i++) {
-            prioritaetenMoeglich.add(i);
-        }
-
-        for (Map.Entry<Character, HashMap<String, Integer>> entry : daten.entrySet()) {
-            int auswahl;
-            boolean weiter = true;
-            while (weiter) {
-                System.out.print("Auftrag " + entry.getKey() + ". Bearbeitungszeit: " + entry.getValue().get(BEARBEITUNGSZEIT) + ". Soll-Endetermin: " + entry.getValue().get(SOLLENDTERMIN));
-                System.out.println(" (Mögliche Prioritäten: " + Joiner.on(", ").join(prioritaetenMoeglich) + ")");
-                Scanner scanner = new Scanner(System.in);
-                try {
-                    auswahl = scanner.nextInt();
-                    if (!prioritaetenMoeglich.contains(auswahl) || auswahl == 0) { System.out.println(" ----- Bitte wählen ie eine von den möglichen Prioritäten! ----- ");
-                    } else {
-                        auftraegePrios.put(entry.getKey(), auswahl);
-                        prioritaetenMoeglich.remove(new Integer(auswahl));
-                        weiter = false;
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println(" ----- Bitte wählen Sie eine von den möglichen Prioritäten! ----- ");
-                }
-
-            }
-
-        }
-
-        Object[] a = auftraegePrios.entrySet().toArray();
-        Arrays.sort(a, new Comparator() {
+        Object[] o = daten.entrySet().toArray();
+        Arrays.sort(o, new Comparator() {
             public int compare(Object o1, Object o2) {
-                return ((Map.Entry<Character, Integer>) o1).getValue()
-                        .compareTo(((Map.Entry<Character, Integer>) o2).getValue());
+                return((Map.Entry<Character, HashMap<String, Integer>>)o1).getValue().get(SOLLENDTERMIN)
+                        .compareTo(((Map.Entry<Character, HashMap<String, Integer>>)o2).getValue().get(SOLLENDTERMIN));
             }
         });
-        listeAuftraege.clear();
-        for (Object e : a) {
-            listeAuftraege.add(((Map.Entry<Character, Integer>) e).getKey());
-        }
 
+        listeAuftraege.clear();
+        for (Object e : o) {
+            listeAuftraege.add(((Map.Entry<Character, HashMap<String, Integer>>) e).getKey());
+        }
+        System.out.println("Blu");
     }
 
 }
